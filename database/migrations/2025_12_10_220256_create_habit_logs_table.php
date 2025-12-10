@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('habit_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('habit_id')->constrained()->onDelete('cascade');
+            $table->date('completed_at');
             $table->timestamps();
         });
     }
