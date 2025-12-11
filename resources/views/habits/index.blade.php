@@ -27,7 +27,7 @@
             </form>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-light">
             <table class="w-full text-sm text-left">
                 <thead class="text-xs text-gray-700 uppercase bg-accent">
                     <tr>
