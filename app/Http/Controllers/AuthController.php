@@ -60,11 +60,18 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            if (is_null(Auth::user()->email_verified_at)) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->withErrors(['email' => 'Por favor, verifica tu dirección de correo electrónico para iniciar sesión.'])->withInput($request->only('email'));
+            }
+            
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
-        return back()->withErrors(['email' => 'Credenciales incorrectas.']);
+        return back()->withErrors(['email' => 'Credenciales incorrectas.'])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)
