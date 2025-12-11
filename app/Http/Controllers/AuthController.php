@@ -45,8 +45,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($user);
-        return redirect()->route('habits.index');
+        return redirect()->route('login')->with('success', 'Registro exitoso. Por favor, verifica tu correo para activar tu cuenta.');
     }
 
     public function login(Request $request)
