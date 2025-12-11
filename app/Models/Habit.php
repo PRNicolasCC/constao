@@ -9,7 +9,13 @@ class Habit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
+
+    // Relación: Un hábito pertenece a un usuario
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Relación: Un hábito tiene muchos registros
     public function logs()
