@@ -22,6 +22,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('password.verify');
     
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+    Route::get('/activar/{token}', [AuthController::class, 'activateAccount'])->name('activar.cuenta');
 });
 
 // Rutas protegidas (Auth)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Mail\OTPMail;
+use App\Mail\ActivateAccountMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -53,9 +54,31 @@ class AuthController extends Controller
             'expires_at' => now()->addMinutes(60),
         ]);
 
-        Mail::to($request->email)->send(new OTPMail($token->token));
+        Mail::to($user->email)->send(new ActivateAccountMail($user, $token->token));
 
         return redirect()->route('login')->with('success', 'Registro exitoso. Por favor, verifica tu correo para activar tu cuenta.');
+    }
+
+    public function activateAccount(int $userId, string $token)
+    {
+        $tokenRecord = Token::where('token', $token)
+            ->where('user_id', $userId)
+            ->first();
+        
+        if (!$tokenRecord || $tokenRecord->isExpired() || $tokenRecord->isUsed()) {
+            return redirect()->route('login')->with('error', 'El enlace de activación es inválido o ha expirado.');
+        }
+        
+        $user = User::find($userId);        
+        $user->email_verified_at = now();
+        $user->save();
+
+        $tokenRecord->is_used = 1;
+        $tokenRecord->save();
+        
+        //$tokenRecord->markAsUsed(); // Keep token for audit purposes
+        
+        return redirect()->route('login')->with('success', 'Cuenta activada correctamente. Ahora puedes iniciar sesión.');
     }
 
     public function login(Request $request)
