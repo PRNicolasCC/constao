@@ -51,4 +51,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Habit::class);
     }
+
+    // Un usuario tiene muchos tokens
+    public function tokens()
+    {
+        return $this->hasMany(Token::class);
+    }
 }

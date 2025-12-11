@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 
+use App\Models\Token;
+
 class AuthController extends Controller
 {
     // --- VISTAS ---
@@ -44,6 +46,14 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $token = Token::create([
+            'token' => bin2hex(random_bytes(32)),
+            'user_id' => $user->id,
+            'expires_at' => now()->addMinutes(60),
+        ]);
+
+        Mail::to($request->email)->send(new OTPMail($token->token));
 
         return redirect()->route('login')->with('success', 'Registro exitoso. Por favor, verifica tu correo para activar tu cuenta.');
     }
@@ -102,11 +112,7 @@ class AuthController extends Controller
         Cache::put('otp_' . $request->email, $otp, 600);
 
         // Enviar correo (Asegúrate de configurar .env con MAIL_MAILER=log para pruebas locales)
-        try {
-            Mail::to($request->email)->send(new OTPMail($otp));
-        } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'Error enviando el correo. Revisa tus logs.']);
-        }
+        Mail::to($request->email)->send(new OTPMail($otp));
 
         // Redirigir a la vista de ingresar código pasando el email
         return redirect()->route('password.otp', ['email' => $request->email]);
