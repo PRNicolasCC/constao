@@ -24,8 +24,19 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed', // requiere campo password_confirmation
+            'email' => 'required|email:rfc,dns|unique:users', // El ':rfc,dns' se añade al email para validar mejor el formato RFC y verificar que el dominio exista
+            'password' => 'required|min:8|confirmed', // 'confirmed' requiere campo password_confirmation
+        ],
+        [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.max' => 'El nombre no puede tener más de 255 caracteres.',
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El correo no tiene un formato válido.',
+            'email.unique' => 'El correo ya está registrado.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
         ]);
 
         $user = User::create([
@@ -41,8 +52,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email:rfc,dns',
             'password' => 'required',
+        ], [
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El correo no tiene un formato válido.',
+            'password.required' => 'La contraseña es obligatoria.',
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -65,7 +80,14 @@ class AuthController extends Controller
 
     public function sendOtp(Request $request)
     {
-        $request->validate(['email' => 'required|email|exists:users,email']);
+        $request->validate(
+            ['email' => 'required|email:rfc,dns|exists:users,email'],
+            [
+                'email.required' => 'El correo es obligatorio.',
+                'email.email' => 'El correo no tiene un formato válido.',
+                'email.exists' => 'El correo no está registrado.'
+            ]
+        );
 
         // Generar código de 6 dígitos
         $otp = rand(100000, 999999);
@@ -87,9 +109,17 @@ class AuthController extends Controller
     public function verifyOtp(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email:rfc,dns',
             'otp' => 'required|numeric',
             'password' => 'required|min:8|confirmed'
+        ], [
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El correo no tiene un formato válido.',
+            'otp.required' => 'El código es obligatorio.',
+            'otp.numeric' => 'El código debe ser numérico.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
         ]);
 
         $cachedOtp = Cache::get('otp_' . $request->email);

@@ -7,13 +7,13 @@
     @csrf
     <div>
         <label for="name" class="block mb-2 text-sm font-medium text-primary">Nombre completo</label>
-        <input type="text" name="name" id="name" required
+        <input type="text" name="name" id="name" value="{{ old('name') }}" required
             class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" placeholder="Tu nombre">
     </div>
 
     <div>
         <label for="email" class="block mb-2 text-sm font-medium text-primary">Correo electrónico</label>
-        <input type="email" name="email" id="email" required
+        <input type="email" name="email" id="email" value="{{ old('email') }}" required
             class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" placeholder="nombre@correo.com">
         @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
@@ -29,6 +29,14 @@
         <input type="password" name="password_confirmation" id="password_confirmation" required
             class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" placeholder="••••••••">
     </div>
+
+    @if ($errors->any())
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
 
     <button type="submit" class="w-full text-white bg-button hover:bg-hover focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
         Registrarse
