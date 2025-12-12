@@ -56,7 +56,9 @@ class AuthController extends Controller
 
         Mail::to($user->email)->send(new ActivateAccountMail($user, $token->token));
 
-        return redirect()->route('login')->with('success', 'Registro exitoso. Por favor, verifica tu correo para activar tu cuenta.');
+        return redirect()
+            ->route('login')
+            ->with('success', 'Registro exitoso. Por favor, verifica tu correo para activar tu cuenta.');
     }
 
     public function activateAccount(int $userId, string $token)
@@ -65,10 +67,12 @@ class AuthController extends Controller
             ->where('user_id', $userId)
             ->first();
         
-        if (!$tokenRecord || $tokenRecord->isExpired() || $tokenRecord->isUsed()) {
-            return redirect()->route('login')->with('error', 'El enlace de activación es inválido o ha expirado.');
+        if (!$tokenRecord || $tokenRecord->isExpired() || !$tokenRecord->isValid() || $tokenRecord->isUsed()) {
+            return redirect()
+                ->route('login')
+                ->with('error', 'El enlace de activación es inválido o ha expirado.');
         }
-        
+
         $user = User::find($userId);        
         $user->email_verified_at = now();
         $user->save();
@@ -78,7 +82,9 @@ class AuthController extends Controller
         
         //$tokenRecord->markAsUsed(); // Keep token for audit purposes
         
-        return redirect()->route('login')->with('success', 'Cuenta activada correctamente. Ahora puedes iniciar sesión.');
+        return redirect()
+            ->route('login')
+            ->with('success', 'Cuenta activada correctamente. Ahora puedes iniciar sesión.');
     }
 
     public function login(Request $request)
@@ -134,7 +140,6 @@ class AuthController extends Controller
         // Guardar en caché por 10 minutos asociado al email
         Cache::put('otp_' . $request->email, $otp, 600);
 
-        // Enviar correo (Asegúrate de configurar .env con MAIL_MAILER=log para pruebas locales)
         Mail::to($request->email)->send(new OTPMail($otp));
 
         // Redirigir a la vista de ingresar código pasando el email

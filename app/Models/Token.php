@@ -26,6 +26,11 @@ class Token extends Model
     {
         return $this->expires_at < now();
     }
+
+    public function isUsed()
+    {
+        return $this->is_used === 1;
+    }
     
     /* public function markAsUsed()
     {
