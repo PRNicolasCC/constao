@@ -16,7 +16,7 @@
                 
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="text-sm text-white bg-secondary hover:bg-hover px-3 py-1.5 rounded transition-colors">
+                    <button type="submit" class="text-sm text-white bg-secondary hover:bg-hover px-3 py-1.5 rounded transition-colors cursor-pointer">
                         Salir
                     </button>
                 </form>
@@ -38,7 +38,7 @@
                            class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" 
                            placeholder="Ej: Leer 30 minutos..." required>
                 </div>
-                <button type="submit" class="text-white bg-button hover:bg-hover focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center transition-colors">
+                <button type="submit" class="text-white bg-button hover:bg-hover focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-auto px-5 py-2.5 text-center transition-colors cursor-pointer">
                     Agregar
                 </button>
             </form>
@@ -74,7 +74,7 @@
                                 <form action="{{ route('habits.destroy', $habit) }}" method="POST" onsubmit="return confirm('¿Borrar hábito?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="font-medium text-red-500 hover:text-red-700 hover:underline">
+                                    <button type="submit" class="font-medium text-red-500 hover:text-red-700 hover:underline cursor-pointer">
                                         Eliminar
                                     </button>
                                 </form>
