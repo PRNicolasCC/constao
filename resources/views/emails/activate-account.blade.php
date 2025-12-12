@@ -1,9 +1,9 @@
 @component('mail::message')
-# Hola {{ $usuario->name }}
+# Hola {{ $user->name }}
 
 Gracias por registrarte. Para activar tu cuenta, haz clic en el siguiente botón:
 
-@component('mail::button', ['url' => route('activar.cuenta', $token)])
+@component('mail::button', ['url' => route('activate-account-email', ['userId' => $user->id, 'token' => $token])])
 Activar Cuenta
 @endcomponent
 

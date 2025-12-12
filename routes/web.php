@@ -23,7 +23,7 @@ Route::middleware('guest')->group(function () {
     
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
-    Route::get('/activar/{token}', [AuthController::class, 'activateAccount'])->name('activar.cuenta');
+    Route::get('/activate/{userId}/{token}', [AuthController::class, 'activateAccount'])->name('activate-account-email');
 });
 
 // Rutas protegidas (Auth)

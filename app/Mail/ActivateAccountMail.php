@@ -10,18 +10,18 @@ class ActivateAccountMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $usuario;
+    public $user;
     public $token;
 
-    public function __construct($usuario, $token)
+    public function __construct($user, $token)
     {
-        $this->usuario = $usuario;
+        $this->user = $user;
         $this->token = $token;
     }
 
     public function build()
     {
         return $this->subject('Activa tu cuenta')
-                    ->markdown('emails.activar-cuenta');
+                    ->markdown('emails.activate-account');
     }
 }

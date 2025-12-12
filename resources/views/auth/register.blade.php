@@ -5,17 +5,18 @@
 
 <form action="{{ route('register') }}" method="POST" class="space-y-4">
     @csrf
-    <div>
-        <label for="name" class="block mb-2 text-sm font-medium text-primary">Nombre completo</label>
-        <input type="text" name="name" id="name" value="{{ old('name') }}" required
-            class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" placeholder="Tu nombre">
-    </div>
 
     <div>
         <label for="email" class="block mb-2 text-sm font-medium text-primary">Correo electrónico</label>
         <input type="email" name="email" id="email" value="{{ old('email') }}" required
             class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" placeholder="nombre@correo.com">
         @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+        <label for="name" class="block mb-2 text-sm font-medium text-primary">Nombre de usuario</label>
+        <input type="text" name="name" id="name" value="{{ old('name') }}" required
+            class="bg-light border border-accent text-primary text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 placeholder-last" placeholder="Tu nombre">
     </div>
 
     <div>
